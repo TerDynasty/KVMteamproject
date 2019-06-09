@@ -3,25 +3,30 @@ from telebot import types
 bot = telebot.TeleBot('883226012:AAHkIxPBq2maVp9EQHLIpuDr8n60Pthbbq4')
 
 
-@bot.message(content_types=['text'])
-def direction_choice(message):
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(*[types.KeyboardButton(name) for name in ['Games', 'Business', 'Sport', 'Total news']])
-    msg = bot.send_message(message.chat.id, 'Choose the topic', reply_markup=keyboard)
-    bot.register_next_step_handler(msg, name)
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    markup = types.ReplyKeyboardMarkup(True)
+    markup.add('Games', 'Business', 'Sport', 'Total news')
+    msg = bot.send_message(message.chat.id, 'Choose the topic: ', reply_markup=markup)
+    bot.register_next_step_handler(msg, reply_func)
 
 
-def name(message):
+@bot.message_handler(commands=['text'])
+def reply_func(message):
     if message.text == 'Games':
-        bot.send_message(message.from_user.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        msg = bot.send_message(message.chat.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        bot.register_next_step_handler(msg, reply_func)
     elif message.text == 'Business':
-        bot.send_message(message.from_user.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        msg = bot.send_message(message.chat.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        bot.register_next_step_handler(msg, reply_func)
     elif message.text == 'Sport':
-        bot.send_message(message.from_user.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        msg = bot.send_message(message.chat.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        bot.register_next_step_handler(msg, reply_func)
     elif message.text == 'Total news':
-        bot.send_message(message.from_user.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        msg = bot.send_message(message.chat.id, "Hi, I am HottestNewsBot and now I'm in the development stage")
+        bot.register_next_step_handler(msg, reply_func)
     else:
-        bot.send_message(message.from_user.id, "I can't understand you, choose one of the topics.")
+        bot.send_message(message.chat.id, "I can't understand you, choose one of the topics or type /start")
 
 
 bot.polling(none_stop=True, interval=0)
