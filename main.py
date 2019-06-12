@@ -5,6 +5,15 @@ from telebot import types
 bot = telebot.TeleBot('883226012:AAHkIxPBq2maVp9EQHLIpuDr8n60Pthbbq4')
 
 
+def get_topic_name():
+    topic_names = []
+    with open('file_domain.txt', 'r') as f:
+        for row in f:
+            parts = row.split(';')
+            topic_names.append(parts[0])
+    return topic_names
+
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     markup = types.ReplyKeyboardMarkup(True)
