@@ -45,7 +45,6 @@ def process_response(topic, message):
                     domain_list.append(parts[n].rstrip())
     for domain in domain_list:
         all_posts = []
-
         response = requests.get('https://api.vk.com/method/wall.get',
                                 params={
                                     'access_token': token,
@@ -83,14 +82,14 @@ def process_response(topic, message):
                         photo_url = attachment['photo']['sizes'][-1]['url']
                     elif attachment['type'] == 'link':
                         links = attachment['link']['url']
-                    if photo_url:
-                        if links:
-                            msg = bot.send_photo(message.chat.id, photo_url,
-                                                 f'{all_posts[index]["text"]}, More detailed: {links[0]}')
-                        else:
-                            msg = bot.send_photo(message.chat.id, photo_url, f'{all_posts[index]["text"]}')
+                if photo_url:
+                    if links:
+                        msg = bot.send_photo(message.chat.id, photo_url,
+                                             f'{all_posts[index]["text"]}, More detailed: {links[0]}')
                     else:
-                        msg = bot.send_message(message.chat.id, f'{all_posts[index]["text"]}')
+                        msg = bot.send_photo(message.chat.id, photo_url, f'{all_posts[index]["text"]}')
+                else:
+                    msg = bot.send_message(message.chat.id, f'{all_posts[index]["text"]}')
             except KeyError:
                 for attachment in all_posts[index]['copy_history'][0]['attachments']:
                     if attachment['type'] == 'video':
@@ -99,16 +98,16 @@ def process_response(topic, message):
                         photo_url = attachment['photo']['sizes'][-1]['url']
                     elif attachment['type'] == 'link':
                         links = attachment['link']['url']
-                    if photo_url:
-                        if links:
-                            msg = bot.send_photo(message.chat.id, photo_url,
-                                                 f'{all_posts[index]["copy_history"][0]["text"]}, '
-                                                 f'More detailed: {links[0]}')
-                        else:
-                            msg = bot.send_photo(message.chat.id, photo_url,
-                                                 f'{all_posts[index]["copy_history"][0]["text"]}')
+                if photo_url:
+                    if links:
+                        msg = bot.send_photo(message.chat.id, photo_url,
+                                             f'{all_posts[index]["copy_history"][0]["text"]}, '
+                                             f'More detailed: {links[0]}')
                     else:
-                        msg = bot.send_message(message.chat.id, f'{all_posts[index]["copy_history"][0]["text"]}')
+                        msg = bot.send_photo(message.chat.id, photo_url,
+                                             f'{all_posts[index]["copy_history"][0]["text"]}')
+                else:
+                    msg = bot.send_message(message.chat.id, f'{all_posts[index]["copy_history"][0]["text"]}')
     return msg
 
 
