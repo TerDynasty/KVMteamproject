@@ -2,8 +2,8 @@ import telebot
 import requests
 import time
 from telebot import types
-
 bot = telebot.TeleBot('883226012:AAHkIxPBq2maVp9EQHLIpuDr8n60Pthbbq4')
+
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -28,7 +28,6 @@ def reply_func(message):
             bot.send_message(message.chat.id, "I can't understand you, choose one of the topics or type /start")
         else:
             print("incorrect message")
-
 
 
 def process_response(topic, message):
@@ -76,22 +75,40 @@ def process_response(topic, message):
         for index in [most_liked1_index, most_liked2_index, most_liked3_index]:
             photo_url = ''
             links = ''
-            for attachment in all_posts[index]['attachments']:
-                if attachment['type'] == 'video':
-                    #video_url = "empty"
-                    pass
-                if attachment['type'] == 'photo':
-                    photo_url = attachment['photo']['sizes'][-1]['url']
-                elif attachment['type'] == 'link':
-                    links = attachment['link']['url']
-            if photo_url:
-                if links:
-                    msg = bot.send_photo(message.chat.id, photo_url,
-                                         f'{all_posts[index]["text"]}, More detailed: {links[0]}')
-                else:
-                    msg = bot.send_photo(message.chat.id, photo_url, f'{all_posts[index]["text"]}')
-            else:
-                msg = bot.send_message(message.chat.id, f'{all_posts[index]["text"]}')
+            try:
+                for attachment in all_posts[index]['attachments']:
+                    if attachment['type'] == 'video':
+                        pass
+                    if attachment['type'] == 'photo':
+                        photo_url = attachment['photo']['sizes'][-1]['url']
+                    elif attachment['type'] == 'link':
+                        links = attachment['link']['url']
+                    if photo_url:
+                        if links:
+                            msg = bot.send_photo(message.chat.id, photo_url,
+                                                 f'{all_posts[index]["text"]}, More detailed: {links[0]}')
+                        else:
+                            msg = bot.send_photo(message.chat.id, photo_url, f'{all_posts[index]["text"]}')
+                    else:
+                        msg = bot.send_message(message.chat.id, f'{all_posts[index]["text"]}')
+            except KeyError:
+                for attachment in all_posts[index]['copy_history'][0]['attachments']:
+                    if attachment['type'] == 'video':
+                        pass
+                    if attachment['type'] == 'photo':
+                        photo_url = attachment['photo']['sizes'][-1]['url']
+                    elif attachment['type'] == 'link':
+                        links = attachment['link']['url']
+                    if photo_url:
+                        if links:
+                            msg = bot.send_photo(message.chat.id, photo_url,
+                                                 f'{all_posts[index]["copy_history"][0]["text"]}, '
+                                                 f'More detailed: {links[0]}')
+                        else:
+                            msg = bot.send_photo(message.chat.id, photo_url,
+                                                 f'{all_posts[index]["copy_history"][0]["text"]}')
+                    else:
+                        msg = bot.send_message(message.chat.id, f'{all_posts[index]["copy_history"][0]["text"]}')
     return msg
 
 
