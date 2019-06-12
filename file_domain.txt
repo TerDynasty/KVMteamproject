@@ -1,0 +1,6 @@
+Games;igromania;vkgames;cybersportru
+Sports;sportexpress;sportsru
+Business;vcru;forbes
+Total news;novostinamaile;ria;kommersant_ru
+Music;vkmusic;rus_muz
+Fashion;cosmopolitan;glamourrussia
